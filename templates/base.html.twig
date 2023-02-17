@@ -14,6 +14,11 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% include('_module/navbar.html.twig') %}
+
+        <div class="container">
+            <h1 class="my-3">{% block title_page %}{% endblock %}</h1>
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>
