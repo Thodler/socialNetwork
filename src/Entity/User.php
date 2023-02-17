@@ -36,6 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $photo = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotNull(message: "Cette valeur ne peut pas être nulle.")]
     private ?string $pseudo = null;
 
     public function getId(): ?int
