@@ -85,4 +85,14 @@ class ArticleController extends AbstractController
         $this->entityManager->flush();
         return $this->redirectToRoute('app_article_index');
     }
+
+    #[Route('/{id}', name: 'app_article_delete', methods: ['DELETE'])]
+    public function delete(Request $request, Article $article): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
+            $this->entityManager->remove($article, true);
+        }
+
+        return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
