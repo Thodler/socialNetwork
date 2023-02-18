@@ -5,4 +5,18 @@
 
 {% block body %}
 
+    {% for article in articles %}
+        <div class="card mb-3">
+            <div class="card-header">
+                {{ article.auteur }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ article.nom }}</h5>
+                <p class="card-text">{{ article.description | u.truncate(250, '...', false) }}</p>
+                <a href="#" class="btn btn-primary">En voir plus</a>
+                <a href="#" class="btn btn-outline-primary">J'ai visité</a>
+            </div>
+        </div>
+    {% endfor %}
+
 {% endblock %}
