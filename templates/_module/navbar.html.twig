@@ -13,7 +13,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ path('app_article_index') }}">Home</a>
+                    <a class="nav-link {{ (app.current_route == 'app_article_index') ?'active': '' }}" aria-current="page" href="{{ path('app_article_index') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ (app.current_route == 'app_article_new') ?'active': '' }}"
+                       aria-current="page"
+                       href="{{ path('app_article_new') }}">
+                        Ajouter un article</a>
                 </li>
             </ul>
             <div class="ms-auto">
@@ -24,7 +30,7 @@
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED') %}
                     <a type="button"
-                       class="btn btn-outline-light"
+                       class="btn {{ app.current_route == 'app_user_show' ? 'btn-light' : 'btn-outline-light' }}"
                        href="{{ path('app_user_show') }}">Votre profil</a>
                     <a type="button"
                        class="btn btn-outline-danger"
