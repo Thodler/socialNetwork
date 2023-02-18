@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+{% block title_page %}{{ article.nom }}{% endblock %}
+
+{% block body %}
+    <div class="">
+        {{ article.description }}
+    </div>
+    <div>
+        {% if (article.commentaires|length < 1) %}
+            <p class="mt-5 text-center fs-3">Soyer le premiere a partager !</p>
+        {% endif %}
+        {% for commentaire in article.commentaires %}
+        <div class="border border-top-0 border border-end-0 border-start-0">
+            <p>
+                {{ commentaire.titre }} - ecrit par {{ commentaire.auteur }}
+            </p>
+            <p>
+                {{ commentaire.commentaire }}
+            </p>
+        </div>
+        {% endfor %}
+        <div class="mt-5">
+            <a class="btn btn-primary">Ajouter un Commentaire</a>
+        </div>
+    </div>
+{% endblock %}
