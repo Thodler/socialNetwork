@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Pays;
 use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,8 +27,8 @@ class Article
     #[Assert\NotBlank(message: "Cette valeur ne peut pas être vide.")]
     private ?string $description = null;
 
-    #[ORM\Column(length: 60, nullable: true)]
-    private ?string $pays = null;
+    #[ORM\Column(length: 60, nullable: true, enumType: Pays::class)]
+    private ?Pays $pays = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
@@ -77,12 +78,12 @@ class Article
         return $this;
     }
 
-    public function getPays(): ?string
+    public function getPays(): ?Pays
     {
         return $this->pays;
     }
 
-    public function setPays(?string $pays): self
+    public function setPays(?Pays $pays): self
     {
         $this->pays = $pays;
 

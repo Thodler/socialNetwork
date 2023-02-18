@@ -1,0 +1,16 @@
+{{ form_start(form) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.description) }}
+    <div class="row">
+        <div class="col-6">
+            {{ form_row(form.type) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.pays) }}
+        </div>
+
+    </div>
+    <div>
+        <button class="btn btn-primary">Envoyer</button>
+    </div>
+{{ form_end(form) }}
