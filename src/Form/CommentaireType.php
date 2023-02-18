@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Commentaire;
 use SebastianBergmann\CodeCoverage\Report\Text;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,10 +17,17 @@ class CommentaireType extends AbstractType
     {
         $builder
             ->add('titre',TextType::class,[
-                'label' => 'Titre'
+                'label' => 'Titre',
+                'required' => true
             ])
-            ->add('commentaire')
-            ->add('photo')
+            ->add('commentaire', TextareaType::class, [
+                'label' => "Votre commentaire",
+                'required' => true
+            ])
+            ->add('photo', FileType::class, [
+                'label' => 'Image du lieu',
+                'required' => false
+            ])
         ;
     }
 

@@ -4,17 +4,17 @@
 {% block title_page %}{{ article.nom }}{% endblock %}
 
 {% block body %}
-    <div class="">
+    <div class="my-5">
         {{ article.description }}
     </div>
     <div>
         {% if (article.commentaires|length < 1) %}
-            <p class="mt-5 text-center fs-3">Soyer le premier à partager !</p>
+            <p class="text-center fs-3">Soyer le premier à partager !</p>
         {% endif %}
         {% for commentaire in article.commentaires %}
-        <div class="border border-top-0 border border-end-0 border-start-0">
-            <p>
-                {{ commentaire.titre }} - ecrit par {{ commentaire.auteur }}
+        <div class="border border border-end-0 border-start-0">
+            <p class="fw-bold">
+                {{ commentaire.titre|upper }} <span class="text-muted">ecrit par {{ commentaire.auteur }}</span>
             </p>
             <p>
                 {{ commentaire.commentaire }}
@@ -23,7 +23,9 @@
         {% endfor %}
         <div class="mt-5">
             <turbo-frame id="add_comment">
-                <a href="{{ path('app_commentaire_new') }}" class="btn btn-primary">Ajouter un Commentaire</a>
+                <a href="{{ path('app_commentaire_new', {'article': article.id }) }}"
+                   class="btn btn-primary">
+                    Ajouter un Commentaire</a>
             </turbo-frame>
         </div>
     </div>
