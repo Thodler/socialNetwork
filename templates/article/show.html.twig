@@ -9,7 +9,7 @@
     </div>
     <div>
         {% if (article.commentaires|length < 1) %}
-            <p class="mt-5 text-center fs-3">Soyer le premiere a partager !</p>
+            <p class="mt-5 text-center fs-3">Soyer le premier à partager !</p>
         {% endif %}
         {% for commentaire in article.commentaires %}
         <div class="border border-top-0 border border-end-0 border-start-0">
@@ -22,7 +22,9 @@
         </div>
         {% endfor %}
         <div class="mt-5">
-            <a class="btn btn-primary">Ajouter un Commentaire</a>
+            <turbo-frame id="add_comment">
+                <a href="{{ path('app_commentaire_new') }}" class="btn btn-primary">Ajouter un Commentaire</a>
+            </turbo-frame>
         </div>
     </div>
 {% endblock %}

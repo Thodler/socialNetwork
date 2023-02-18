@@ -5,7 +5,8 @@
 {% block body %}
     <h1>Create new Commentaire</h1>
 
-    {{ include('commentaire/_form.html.twig') }}
+    <turbo-frame id="add_comment">
+        {{ include('commentaire/_form.html.twig') }}
+    </turbo-frame>
 
-    <a href="{{ path('app_commentaire_index') }}">back to list</a>
 {% endblock %}

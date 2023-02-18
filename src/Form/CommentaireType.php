@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Commentaire;
+use SebastianBergmann\CodeCoverage\Report\Text;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,11 +14,11 @@ class CommentaireType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titre')
+            ->add('titre',TextType::class,[
+                'label' => 'Titre'
+            ])
             ->add('commentaire')
             ->add('photo')
-            ->add('article')
-            ->add('auteur')
         ;
     }
 
