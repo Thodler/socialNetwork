@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Commentaire;
 use App\Form\CommentaireType;
 use App\Repository\CommentaireRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,66 +14,62 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/commentaire')]
 class CommentaireController extends AbstractController
 {
-    #[Route('/', name: 'app_commentaire_index', methods: ['GET'])]
-    public function index(CommentaireRepository $commentaireRepository): Response
-    {
-        return $this->render('commentaire/index.html.twig', [
-            'commentaires' => $commentaireRepository->findAll(),
-        ]);
-    }
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ){}
 
     #[Route('/new', name: 'app_commentaire_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CommentaireRepository $commentaireRepository): Response
+    public function new(Request $request): Response
     {
         $commentaire = new Commentaire();
         $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $commentaireRepository->save($commentaire, true);
+            $this->entityManager->flush($commentaire);
 
-            return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute(
+                route: 'app_article_show',
+                parameters: [ 'id' => $commentaire->getArticle()->getId()],
+                status: Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('commentaire/new.html.twig', [
+        return $this->render('commentaire/new.html.twig', [
             'commentaire' => $commentaire,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_commentaire_show', methods: ['GET'])]
-    public function show(Commentaire $commentaire): Response
+    #[Route('/{id}/edit', name: 'app_commentaire_edit', methods: ['GET', 'PUT'])]
+    public function edit(Request $request, Commentaire $commentaire): Response
     {
-        return $this->render('commentaire/show.html.twig', [
-            'commentaire' => $commentaire,
+        $form = $this->createForm(CommentaireType::class, $commentaire, [
+            'method' => 'PUT'
         ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_commentaire_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Commentaire $commentaire, CommentaireRepository $commentaireRepository): Response
-    {
-        $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $commentaireRepository->save($commentaire, true);
+            $this->entityManager->flush($commentaire);
 
-            return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute(
+                route:'app_article_show',
+                parameters: ['id' => $commentaire->getArticle()->getId()],
+                status: Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('commentaire/edit.html.twig', [
-            'commentaire' => $commentaire,
-            'form' => $form,
-        ]);
+        return $this->render('commentaire/edit.html.twig', compact('form'));
     }
 
     #[Route('/{id}', name: 'app_commentaire_delete', methods: ['DELETE'])]
     public function delete(Request $request, Commentaire $commentaire, CommentaireRepository $commentaireRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$commentaire->getId(), $request->request->get('_token'))) {
-            $commentaireRepository->remove($commentaire, true);
+            $this->entityManager->remove($commentaire);
         }
 
-        return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute(
+            route: 'app_article_show',
+            parameters: ['id' => $commentaire->getArticle()->getId()],
+            status: Response::HTTP_SEE_OTHER);
     }
 }
