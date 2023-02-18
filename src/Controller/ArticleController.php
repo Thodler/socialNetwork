@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Form\ArticleType;
+use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,14 +13,25 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ){}
+
     #[Route('/', name: 'app_article_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(ArticleRepository $articleRepository): Response
     {
-        return $this->render('article/index.html.twig');
+        $articles = $articleRepository->findAll();
+        return $this->render('article/index.html.twig', compact('articles'));
+    }
+
+    #[Route('/{id<\d+>}', name: 'app_article_show', methods: ['GET', 'POST'])]
+    public function show(Article $article): Response
+    {
+        return $this->render('article/show.html.twig',compact('article'));
     }
 
     #[Route('/article', name: 'app_article_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
@@ -28,8 +40,29 @@ class ArticleController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             $article->setAuteur($this->getUser());
-            $entityManager->persist($article);
-            $entityManager->flush();
+            $this->entityManager->persist($article);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Votre article a été enregistré.');
+            return $this->redirectToRoute('app_article_index');
+        }
+
+        return $this->render('article/new.html.twig',[
+            'form' => $form
+        ]);
+    }
+
+    #[Route('/article/edit/{id<\d+>}', name: 'app_article_edit', methods: ['GET', 'PUT'])]
+    public function edit(Request $request, Article $article): Response
+    {
+        $form = $this->createForm(ArticleType::class, $article, [
+            'method' => 'PUT'
+        ]);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'Votre article a été mise à jour.');
             return $this->redirectToRoute('app_article_index');
@@ -38,5 +71,18 @@ class ArticleController extends AbstractController
         return $this->render('article/new.html.twig',[
             'form' => $form
         ]);
+    }
+
+    #[Route('/article/vue/{id<\d+>}', name: 'app_article_visited', methods: ['GET', 'POST'])]
+    public function onVisited(Article $article): Response
+    {
+        if($article->getVisiteurs()->contains($this->getUser())){
+            $article->removeVisiteur($this->getUser());
+        }else{
+            $article->addVisiteur($this->getUser());
+        }
+
+        $this->entityManager->flush();
+        return $this->redirectToRoute('app_article_index');
     }
 }
