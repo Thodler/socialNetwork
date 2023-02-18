@@ -20,7 +20,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email(message: "Veuillez saisir une adresse e-mail valide.")]
-    #[Assert\NotNull(message: "Cette valeur ne peut pas être nulle.")]
+    #[Assert\NotBlank(message: "Cette valeur ne peut pas être nulle.")]
     private ?string $email = null;
 
     #[ORM\Column]

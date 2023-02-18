@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\TypeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: TypeRepository::class)]
 class Type
@@ -14,6 +16,7 @@ class Type
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Cette valeur ne peut pas être vide.")]
     private ?string $nom = null;
 
     public function getId(): ?int
