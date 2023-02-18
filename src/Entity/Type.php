@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: TypeRepository::class)]
+#[ORM\Table('types')]
 class Type
 {
     #[ORM\Id]
