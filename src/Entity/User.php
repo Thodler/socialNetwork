@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -41,6 +43,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $pseudo = null;
 
     private ?string $plainPassword = null;
+
+    #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: Article::class)]
+    private Collection $articles;
+
+    #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'visiteur')]
+    private Collection $destinations;
+
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+        $this->destinations = new ArrayCollection();
+    }
 
     /**
      * @return string|null
@@ -149,6 +163,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(string $pseudo): self
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Article>
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function addArticle(Article $article): self
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
+            $article->setAuteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticle(Article $article): self
+    {
+        if ($this->articles->removeElement($article)) {
+            // set the owning side to null (unless already changed)
+            if ($article->getAuteur() === $this) {
+                $article->setAuteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Article>
+     */
+    public function getDestinations(): Collection
+    {
+        return $this->destinations;
+    }
+
+    public function addDestination(Article $destination): self
+    {
+        if (!$this->destinations->contains($destination)) {
+            $this->destinations->add($destination);
+            $destination->addVisiteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDestination(Article $destination): self
+    {
+        if ($this->destinations->removeElement($destination)) {
+            $destination->removeVisiteur($this);
+        }
 
         return $this;
     }
