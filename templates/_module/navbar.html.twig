@@ -17,6 +17,11 @@
                 </li>
             </ul>
             <div class="ms-auto">
+                {% if is_granted('ROLE_ADMIN') %}
+                <a type="button"
+                   class="btn btn-outline-warning"
+                   href="{{ path('admin') }}">Admin</a>
+                {% endif %}
                 {% if is_granted('IS_AUTHENTICATED') %}
                     <a type="button"
                        class="btn btn-outline-light"
