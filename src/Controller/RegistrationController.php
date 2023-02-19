@@ -34,7 +34,7 @@ class RegistrationController extends AbstractController
             $file = $form['photo']->getData();
             if($file){
                 $avatar = uniqid().'.'.$file->guessExtension();
-                $file->move('/uploads/photos', $avatar);
+                $file->move('uploads/photos', $avatar);
             }else{
                 $avatar = 'default.jpg';
             }

@@ -31,6 +31,12 @@ class CommentaireController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form['photo']->getData();
+            if($file){
+                $photo = uniqid().'.'.$file->guessExtension();
+                $file->move('uploads/photos', $photo);
+                $commentaire->setPhoto($photo);
+            }
             $commentaire->setArticle($article);
             $commentaire->setAuteur($this->getUser());
 

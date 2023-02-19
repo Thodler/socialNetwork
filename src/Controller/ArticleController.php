@@ -20,8 +20,9 @@ class ArticleController extends AbstractController
     #[Route('/', name: 'app_article_index', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository): Response
     {
+        $visites = $articleRepository->findMostVisiteArticles();
         $articles = $articleRepository->findAll();
-        return $this->render('article/index.html.twig', compact('articles'));
+        return $this->render('article/index.html.twig', compact('articles', 'visites'));
     }
 
     #[Route('/{id<\d+>}', name: 'app_article_show', methods: ['GET', 'POST'])]
@@ -30,7 +31,7 @@ class ArticleController extends AbstractController
         return $this->render('article/show.html.twig',compact('article'));
     }
 
-    #[Route('/article', name: 'app_article_new', methods: ['GET', 'POST'])]
+    #[Route('/app/article', name: 'app_article_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
         $article = new Article();
@@ -52,7 +53,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/article/edit/{id<\d+>}', name: 'app_article_edit', methods: ['GET', 'PUT'])]
+    #[Route('/app/article/edit/{id<\d+>}', name: 'app_article_edit', methods: ['GET', 'PUT'])]
     public function edit(Request $request, Article $article): Response
     {
         $form = $this->createForm(ArticleType::class, $article, [
@@ -73,7 +74,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/article/vue/{id<\d+>}', name: 'app_article_visited', methods: ['GET', 'POST'])]
+    #[Route('/app/article/vue/{id<\d+>}', name: 'app_article_visited', methods: ['GET', 'POST'])]
     public function onVisited(Article $article): Response
     {
         if($article->getVisiteurs()->contains($this->getUser())){
@@ -86,7 +87,7 @@ class ArticleController extends AbstractController
         return $this->redirectToRoute('app_article_index');
     }
 
-    #[Route('/{id}', name: 'app_article_delete', methods: ['DELETE'])]
+    #[Route('/app/{id}', name: 'app_article_delete', methods: ['DELETE'])]
     public function delete(Request $request, Article $article): Response
     {
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
