@@ -12,21 +12,36 @@
             <p class="text-center fs-3">Soyer le premier à partager !</p>
         {% endif %}
         {% for commentaire in article.commentaires %}
-        <div class="border border border-end-0 border-start-0">
-            <p class="fw-bold">
-                {{ commentaire.titre|upper }} <span class="text-muted">ecrit par {{ commentaire.auteur }}</span>
-            </p>
-            <p>
-                {{ commentaire.commentaire }}
-            </p>
-        </div>
+                <div class="row g-0 bg-light position-relative mb-1">
+                    {% if commentaire.photo %}
+                        <div class="col-md-6 mb-md-0 p-md-4">
+                            <img src="{{ asset('uploads/photos/'~commentaire.photo) }}" class="w-100" alt="Illustration du commentaire">
+                        </div>
+                        <div class="col-md-6 p-4 ps-md-0">
+                            <h5 class="mt-0">Columns with stretched link</h5>
+                            <p>{{ commentaire.commentaire }}</p>
+                        </div>
+                    {% else %}
+                        <div class="col p-4">
+                            <h5 class="mt-0">Columns with stretched link</h5>
+                            <p>{{ commentaire.commentaire }}</p>
+                        </div>
+                    {% endif %}
+                    <p class="fw-bold px-3 text-end">
+                        <span class="text-muted">ecrit par {{ commentaire.auteur }}</span>
+                    </p>
+                </div>
         {% endfor %}
         <div class="my-5">
+            {% if app.user %}
             <turbo-frame id="add_comment">
                 <a href="{{ path('app_commentaire_new', {'article': article.id }) }}"
                    class="btn btn-primary">
                     Ajouter un Commentaire</a>
             </turbo-frame>
+            {% else %}
+                <p>Vous devez etre <a href="{{ path('app_login') }}">connecter</a> poupr ajouter un commentaire</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

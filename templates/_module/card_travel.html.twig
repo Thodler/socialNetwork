@@ -1,0 +1,15 @@
+<div class="card-group">
+    {% for visite in visites %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a class="text-decoration-none" href="{{ path('app_article_show', {id:visite[0].id }) }}">{{ visite[0].nom }}</a>
+                </h5>
+                <p class="card-text">{{ visite[0].description|u.truncate(250, '...', false) }}</p>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Visiter {{ visite.nb_visite }} fois</small>
+            </div>
+        </div>
+    {% endfor %}
+</div>

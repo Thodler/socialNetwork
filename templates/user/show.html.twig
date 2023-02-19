@@ -17,4 +17,10 @@
             </div>
         </div>
     </div>
+    <div>
+        {% for commentaire in user.commentaires %}
+            <p>{{ commentaire.titre }}</p>
+            <hr>
+        {% endfor %}
+    </div>
 {% endblock %}
