@@ -79,6 +79,7 @@ class CommentaireController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$commentaire->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($commentaire);
             $this->entityManager->flush();
+            $this->addFlash('success', "Votre commentaire a bien été supprimé.");
         }
 
         return $this->redirectToRoute(

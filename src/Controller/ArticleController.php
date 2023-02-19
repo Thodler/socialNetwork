@@ -93,6 +93,7 @@ class ArticleController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($article);
             $this->entityManager->flush();
+            $this->addFlash('success', "Votre article a bien été supprimé.");
         }
 
         return $this->redirectToRoute('app_user_show', [], Response::HTTP_SEE_OTHER);
