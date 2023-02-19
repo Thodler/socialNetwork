@@ -39,6 +39,18 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
+    public  function findMostVisiteArticles(int $limit = 3 ): array
+    {
+        $dql = 'SELECT a, COUNT(au.id) as nb_visite
+                FROM App\Entity\Article a
+                JOIN a.visiteurs au
+                GROUP BY a.id
+                ORDER BY nb_visite DESC';
+        $query = $this->getEntityManager()->createQuery($dql);
+        $query->setMaxResults(3);
+        return $query->getResult();
+    }
+
 //    /**
 //     * @return Article[] Returns an array of Article objects
 //     */
