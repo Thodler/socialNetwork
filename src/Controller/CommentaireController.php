@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/commentaire')]
+#[Route('/app/commentaire')]
 class CommentaireController extends AbstractController
 {
     public function __construct(
@@ -73,16 +73,16 @@ class CommentaireController extends AbstractController
         return $this->render('commentaire/edit.html.twig', compact('form'));
     }
 
-    #[Route('/{id<\d+>}', name: 'app_commentaire_delete', methods: ['DELETE'])]
+    #[Route('/{id<\d+>}', name: 'app_commentaire_delete', methods: ['POST'])]
     public function delete(Request $request, Commentaire $commentaire, CommentaireRepository $commentaireRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$commentaire->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($commentaire);
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute(
-            route: 'app_article_show',
-            parameters: ['id' => $commentaire->getArticle()->getId()],
+            route: 'app_user_show',
             status: Response::HTTP_SEE_OTHER);
     }
 }

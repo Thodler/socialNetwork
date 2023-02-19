@@ -17,10 +17,42 @@
             </div>
         </div>
     </div>
-    <div>
-        {% for commentaire in user.commentaires %}
-            <p>{{ commentaire.titre }}</p>
-            <hr>
-        {% endfor %}
+
+    <div class="card">
+        <div class="card-header">
+            Vos Commentaires
+        </div>
+        {% if user.commentaires|length < 1 %}
+            <p class="text-center my-5">Vous n'avez pas écrit de commentaire.</p>
+        {% else %}
+        <ul class="list-group list-group-flush">
+            {% for commentaire in user.commentaires %}
+            <li class="list-group-item">
+                <p>{{ commentaire.titre }}</p>
+                <p>{{ commentaire.commentaire }}</p>
+                {{ include('commentaire/_delete_form.html.twig') }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+    <div class="card my-3">
+        <div class="card-header">
+            Vos Articles
+        </div>
+        {% if user.articles|length < 1 %}
+            <p class="text-center my-5">Vous n'avez pas écrit d'article.</p>
+        {% else %}
+            <ul class="list-group list-group-flush">
+                {% for article in user.articles %}
+                    <li class="list-group-item">
+                        <p class="fw-bold">{{ article.nom }}</p>
+                        <p>{{ article.description|u.truncate(100, '...', false) }}</p>
+                        {{ include('article/_delete_form.html.twig') }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 {% endblock %}
